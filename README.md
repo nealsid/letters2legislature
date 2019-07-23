@@ -7,6 +7,9 @@ The requirements that separate it from normal document-writing features are:
 
 * Integration with the current list of legslatures and bills being considered in the chambers.
 
+* Not necessarily multi-user with the latest in collaboration features, but that could be a great feature set for v2.
+
 For instance, I'm writing a letter to a sponsor of a bill who is in VA.  I also want to write to my local legislature to ask about supporting of the bill (for upcoming votes) and to mention that I've written to the bill's sponsors.  Having the boilerplate about my support in the latter documents update if I make changes in the first letter, while maintaing the personalized message indicating I've written to the bill's sponsors, would make managing changes much much easier, while enabling a consistently stated message in all letter for one topic.
+
 
 More to come...
