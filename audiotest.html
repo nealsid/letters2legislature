@@ -3,22 +3,85 @@
   <title>Audio test</title>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&display=swap" rel="stylesheet">
   <style>
+    #grid-wrapper {
+	display:grid;
+	grid-template-columns: 20% 80%;
+    }
+    #congress-search {
+	grid-column-start: 1;
+	grid-column-end: 2;
+    }
+
+    #letter-composition {
+	grid-column-start: 2;
+	grid-column-end: 3;
+    }
     #letter {
 	font-family: 'IBM Plex Mono', monospace;
+	width: 100%;
+	border-radius: 5px;
+	height: 500px;
+	padding-right: 50px;
     }
+    .legislator-list-entry-style:hover {
+	background-color: lightgreen;
+    }
+
   </style>
+  <script src="jquery-3.4.1.min.js"></script>
+  <script src="papaparse.min.js"></script>
+  <script>
+    $(document).ready(() => {
+	Papa.parse("legislators-current.csv", {
+	    download: true,
+	    header: true,
+	    complete: function(results) {
+		var data = results.data;
+		var uiparent = document.getElementById("congress-search");
+		var listNode = document.createElement("ul");
+		for (var legislator of data) {
+		    var full_name = legislator["full_name"];
+		    var listItem = document.createElement("li");
+		    listItem.setAttribute("class", "legislator-list-entry-style");
+		    var text = document.createTextNode(full_name);
+		    listItem.appendChild(text);
+		    listNode.appendChild(listItem);
+
+		    $(listItem).click(function(legislator) {
+			return () => {
+			    $("#letter").text(legislator["full_name"] + "\n" + legislator["address"]);
+			}
+		    }(legislator));
+		}
+		uiparent.appendChild(listNode);
+	    }
+	});
+    });
+    </script>
   </head>
   <body>
-    <textarea width=100% id="letter">
-    </textarea>
-    <audio src="typewriter.mp3" autoplay=false id="typewriter">
-    </audio>
+    <div id="grid-wrapper">
+      <div id="congress-search">
+	<h2>Members of Congress</h2>
+      </div>
+      <div id="letter-composition">
+	<textarea id="letter"></textarea>
+	<audio src="typewriter.mp3" autoplay=false id="typewriter">
+	</audio>
+      </div>
+    </div>
+
     <script>
       document.getElementById("letter").onkeypress = () => {
 	  var v = document.getElementById("typewriter");
 	  v.pause();
 	  v.currentTime = 0;
-	  v.play();
+	  let playPromise = v.play();
+	  if (playPromise !== undefined) {
+	      playPromise.catch(error => {
+		  // pass thru, we expect to pause it in the middle.
+	      });
+	  }
       };
     </script>
 </html>
